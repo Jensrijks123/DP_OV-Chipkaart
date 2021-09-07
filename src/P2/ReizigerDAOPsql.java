@@ -119,7 +119,7 @@ public class ReizigerDAOPsql implements ReizigerDAO{
     public List<Reiziger> findAll() throws SQLException {
 
 //        List<Reiziger> s = null;
-        List<String> s = null;
+        List<String> ss = null;
 
         try {
             String findAll = "SELECT * FROM reiziger";
@@ -127,15 +127,15 @@ public class ReizigerDAOPsql implements ReizigerDAO{
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                s.add(rs.getInt("reiziger_id") + " " + rs.getString("voorletters") + ". " + rs.getString("achternaam"));
+                ss.add(rs.getInt("reiziger_id") + " " + rs.getString("voorletters") + ". " + rs.getString("achternaam"));
             }
-            System.out.println(s);
+            System.out.println(ss);
             pst.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
         }
         return null;
-//        return s;
+//        return ss;
     }
 }
