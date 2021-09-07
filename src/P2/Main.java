@@ -14,7 +14,7 @@ public class Main {
 
 
         String gebruikersnaam = "postgres";
-        String Wachtwoord = "password";
+        String Wachtwoord = "Password";
 
         String url = "jdbc:postgresql://localhost:5432/ovchip";
 

@@ -32,44 +32,110 @@ public class ReizigerDAOPsql implements ReizigerDAO{
 
     @Override
     public boolean update(Reiziger reiziger) {
-        return false;
+        try {
+            String update = "UPDATE reiziger " + "SET reiziger_id =?, voorletters =?, tussenvoegsel =?, achternaam =?, geboortedatum =?" + "WHERE reiziger_id =?";
+            PreparedStatement pst = connection.prepareStatement(update);
+            pst.setInt(1, reiziger.getId());
+            pst.setString(2, reiziger.getVoorletters());
+            pst.setString(3, reiziger.getTussenvoegsel());
+            pst.setString(4, reiziger.getAchternaam());
+            pst.setDate(5, reiziger.getGeboortedatum());
+            pst.setInt(6, reiziger.getId());
+            ResultSet r = pst.executeQuery();
+            pst.close();
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean delete(Reiziger reiziger) {
-        return false;
+        try {
+            String delete = "DELETE FROM reiziger WHERE reiziger_id =?";
+            PreparedStatement pst = connection.prepareStatement(delete);
+            pst.setInt(1, reiziger.getId());
+            ResultSet r = pst.executeQuery();
+            pst.close();
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override
     public Reiziger findById(int id) {
+
+        String s = "";
+
+        try {
+            String findById = "SELECT * FROM reiziger WHERE reiziger_id =?";
+            PreparedStatement pst = connection.prepareStatement(findById);
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                s = s + rs.getInt("reiziger_id") + " " + rs.getString("voorletters") + ". " + rs.getString("achternaam");
+            }
+            System.out.println(s);
+            pst.close();
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+        }
         return null;
+//        return s;
     }
 
     @Override
     public List<Reiziger> findByGbdatum(String datum) {
+
+//        List<Reiziger> s = null;
+        List<String> s = null;
+
+        try {
+            String findByDatum = "SELECT * FROM reiziger WHERE geboortedatum =?";
+            PreparedStatement pst = connection.prepareStatement(findByDatum);
+            pst.setString(1, datum);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                s.add(rs.getInt("reiziger_id") + " " + rs.getString("voorletters") + ". " + rs.getString("achternaam"));
+            }
+            System.out.println(s);
+            pst.close();
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+        }
         return null;
+//        return s;
     }
+
 
     @Override
     public List<Reiziger> findAll() throws SQLException {
-        List<Reiziger> reizigers = null;
-        String s ="";
 
-        Statement st = connection.createStatement();
+//        List<Reiziger> s = null;
+        List<String> s = null;
 
-        ResultSet rs = st.executeQuery("SELECT * FROM reiziger");
+        try {
+            String findAll = "SELECT * FROM reiziger";
+            PreparedStatement pst = connection.prepareStatement(findAll);
+            ResultSet rs = pst.executeQuery();
 
-
-        System.out.println("Alle reizigers:");
-
-        while (rs.next())
-        {
-            String tussen = rs.getString("tussenvoegsel");
-            if (tussen == null){
-                tussen = "";
+            while (rs.next()) {
+                s.add(rs.getInt("reiziger_id") + " " + rs.getString("voorletters") + ". " + rs.getString("achternaam"));
             }
-            System.out.println("    #" + rs.getInt("reiziger_id") + ": " + rs.getString("voorletters")+". "+ tussen + " " +  rs.getString("achternaam")+" ("+rs.getDate("geboortedatum")+")");
+            System.out.println(s);
+            pst.close();
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
         }
-        return reizigers;
+        return null;
+//        return s;
     }
 }
