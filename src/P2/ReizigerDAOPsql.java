@@ -68,8 +68,6 @@ public class ReizigerDAOPsql implements ReizigerDAO{
     @Override
     public Reiziger findById(int id) {
 
-        String s = "";
-
         try {
             String findById = "SELECT * FROM reiziger WHERE reiziger_id =?";
             PreparedStatement pst = connection.prepareStatement(findById);
@@ -77,49 +75,45 @@ public class ReizigerDAOPsql implements ReizigerDAO{
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                s = s + rs.getInt("reiziger_id") + " " + rs.getString("voorletters") + ". " + rs.getString("achternaam");
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5));
+                return reiziger;
             }
-            System.out.println(s);
             pst.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
         }
         return null;
-//        return s;
     }
 
     @Override
     public List<Reiziger> findByGbdatum(String datum) {
 
-//        List<Reiziger> s = null;
-        List<String> s = null;
+        List<Reiziger> reizigers = new ArrayList<>();
 
         try {
             String findByDatum = "SELECT * FROM reiziger WHERE geboortedatum =?";
             PreparedStatement pst = connection.prepareStatement(findByDatum);
-            pst.setString(1, datum);
+            pst.setDate(1, java.sql.Date.valueOf(datum));
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                s.add(rs.getInt("reiziger_id") + " " + rs.getString("voorletters") + ". " + rs.getString("achternaam"));
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5));
+                reizigers.add(reiziger);
             }
-            System.out.println(s);
             pst.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
         }
-        return null;
-//        return s;
+        return reizigers;
     }
 
 
     @Override
     public List<Reiziger> findAll() throws SQLException {
 
-//        List<Reiziger> s = null;
-        List<String> ss = null;
+        List<Reiziger> reizigers = new ArrayList<>();
 
         try {
             String findAll = "SELECT * FROM reiziger";
@@ -127,15 +121,14 @@ public class ReizigerDAOPsql implements ReizigerDAO{
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                ss.add(rs.getInt("reiziger_id") + " " + rs.getString("voorletters") + ". " + rs.getString("achternaam"));
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5));
+                reizigers.add(reiziger);
             }
-            System.out.println(ss);
             pst.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
         }
-        return null;
-//        return ss;
+        return reizigers;
     }
 }
