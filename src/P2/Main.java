@@ -44,7 +44,7 @@ public class Main {
         System.out.print("[Test]  ");
         Reiziger jens = new Reiziger(24, "B", "", "Bernardo", java.sql.Date.valueOf("2002-09-19"));
         rdao.save(jens);
-
+        System.out.println();
 
         // Haal alle reizigers op uit de database
         List<Reiziger> reizigers = rdao.findAll();
