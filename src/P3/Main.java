@@ -1,8 +1,11 @@
 package P3;
 
-import P2.Reiziger;
-import P2.ReizigerDAO;
-import P2.ReizigerDAOPsql;
+import P3.DAO.AdresDAO;
+import P3.DAO.AdresDAOPsql;
+import P3.DAO.ReizigerDAO;
+import P3.DAO.ReizigerDAOPsql;
+import P3.Domain.Adres;
+import P3.Domain.Reiziger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,6 +32,7 @@ public class Main {
         p.setProperty("password", Wachtwoord);
 
         connection = DriverManager.getConnection(url, p);
+
         AdresDAO AdresDAO = new AdresDAOPsql(connection);
 
         testAdresDAO(AdresDAO);
@@ -41,16 +45,16 @@ public class Main {
 
         // Save Adres
         System.out.print("[Test]  ");
-        P3.Reiziger gozer = new P3.Reiziger(19, "B", "", "Bernardo", java.sql.Date.valueOf("2002-09-19"), null);
-        Adres benschop = new Adres(24, "3401BI", "101", "BernardoWijk", "Benschop", gozer.getId());
+        Reiziger gozer = new Reiziger(19, "B", "", "Bernardo", java.sql.Date.valueOf("2002-09-19"), null);
+        Adres benschop = new Adres(24, "3401BI", "101", "BernardoWijk", "Benschop", gozer);
         adao.save(benschop);
         System.out.println();
 
 
         // Update Adres
         String gbdatumUpdate = "2012-11-07";
-        P3.Reiziger reizigerUpdate = new P3.Reiziger(19, "D", null, "Bonk", java.sql.Date.valueOf(gbdatumUpdate), null);
-        Adres utrecht = new Adres(24, "1461BJ", "191", "Whilhelm", "Utrecht", reizigerUpdate.getId());
+        Reiziger reizigerUpdate = new Reiziger(19, "D", null, "Bonk", java.sql.Date.valueOf(gbdatumUpdate), null);
+        Adres utrecht = new Adres(24, "1461BJ", "191", "Whilhelm", "Utrecht", reizigerUpdate);
         System.out.println("[Test]");
         System.out.println(adao.update(utrecht));
         System.out.println();
@@ -58,8 +62,8 @@ public class Main {
 
         // Delete
         String gbdatumDelete = "2002-12-03";
-        P3.Reiziger reizigerDelete = new P3.Reiziger(19, "F", null, "Memari", java.sql.Date.valueOf(gbdatumDelete), null);
-        Adres utrecht2 = new Adres(24, "1461BJ", "191", "Whilhelm", "Utrecht", reizigerDelete.getId());
+        Reiziger reizigerDelete = new Reiziger(19, "F", null, "Memari", java.sql.Date.valueOf(gbdatumDelete), null);
+        Adres utrecht2 = new Adres(24, "1461BJ", "191", "Whilhelm", "Utrecht", reizigerDelete);
         System.out.println("[Test]");
         System.out.println(adao.delete(utrecht2));
 
@@ -77,7 +81,7 @@ public class Main {
 
         // Find by Reiziger
         String gbdatumReiziger = "1991-12-03";
-        P3.Reiziger reizigerTesting = new P3.Reiziger(5, "F", null, "Memari", java.sql.Date.valueOf(gbdatumReiziger), null);
+        Reiziger reizigerTesting = new Reiziger(5, "F", null, "Memari", java.sql.Date.valueOf(gbdatumReiziger), null);
         List<Adres> adressenReizger = adao.findByReiziger(reizigerTesting);
         System.out.println("[Test]");
         for (Adres ar : adressenReizger) {

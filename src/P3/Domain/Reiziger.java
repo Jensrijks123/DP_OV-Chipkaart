@@ -1,4 +1,4 @@
-package P3;
+package P3.Domain;
 
 public class Reiziger {
 
@@ -58,6 +58,14 @@ public class Reiziger {
         this.geboortedatum = geboortedatum;
     }
 
+    public Adres getAdres() {
+        return adres;
+    }
+
+    public void setAdres(Adres adres) {
+        this.adres = adres;
+    }
+
     public String getNaam() {
         if (tussenvoegsel == null) {
             tussenvoegsel = "";
@@ -72,7 +80,8 @@ public class Reiziger {
                 ", voorletters='" + voorletters + '\'' +
                 ", tussenvoegsel='" + tussenvoegsel + '\'' +
                 ", achternaam='" + achternaam + '\'' +
-                ", geboortedatum=" + geboortedatum +
+                ", geboortedatum=" + geboortedatum + '\'' +
+                ", adres=" + adres +
                 '}';
     }
 }

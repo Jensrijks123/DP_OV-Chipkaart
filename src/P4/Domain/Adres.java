@@ -7,9 +7,9 @@ public class Adres {
     private String huisnummer;
     private String straat;
     private String woonplaats;
-    private int reiziger;
+    private Reiziger reiziger;
 
-    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, int reiziger) {
+    public Adres(int id, String postcode, String huisnummer, String straat, String woonplaats, Reiziger reiziger) {
         this.id = id;
         this.postcode = postcode;
         this.huisnummer = huisnummer;
@@ -58,11 +58,11 @@ public class Adres {
         this.woonplaats = woonplaats;
     }
 
-    public int getReiziger() {
+    public Reiziger getReiziger() {
         return reiziger;
     }
 
-    public void setReiziger(int reiziger) {
+    public void setReiziger(Reiziger reiziger) {
         this.reiziger = reiziger;
     }
 

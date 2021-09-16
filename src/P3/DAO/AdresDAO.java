@@ -1,4 +1,4 @@
-package P4.DAO;
+package P3.DAO;
 
 import P3.Domain.Adres;
 import P3.Domain.Reiziger;
@@ -10,11 +10,11 @@ public interface AdresDAO {
 
     boolean save(Adres adres) throws SQLException;
 
-    boolean update(Adres adres);
+    boolean update(Adres adres) throws SQLException;
 
-    boolean delete(Adres adres);
+    boolean delete(Adres adres) throws SQLException;
 
-    List<Adres> findByReiziger(Reiziger reiziger);
+    Adres findByReiziger(Reiziger reiziger) throws SQLException;
 
     List<Adres> findAll() throws SQLException;
 

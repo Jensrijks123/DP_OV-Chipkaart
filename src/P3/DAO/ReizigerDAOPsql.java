@@ -1,6 +1,8 @@
-package P3;
+package P3.DAO;
 
-import P2.Reiziger;
+
+import P3.Domain.Adres;
+import P3.Domain.Reiziger;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -9,12 +11,14 @@ import java.util.List;
 public class ReizigerDAOPsql implements ReizigerDAO {
     private Connection connection;
 
+    AdresDAO adresDAO = new AdresDAOPsql(connection);
+
     public ReizigerDAOPsql(Connection connection) throws SQLException {
         this.connection = connection;
     }
 
     @Override
-    public boolean save(P2.Reiziger reiziger){
+    public boolean save(Reiziger reiziger) throws SQLException{
         try {
             String save = "INSERT INTO reiziger(reiziger_id, voorletters, tussenvoegsel, achternaam, geboortedatum)" + "VALUES (?, ?, ?, ?, ?)";
             PreparedStatement pst = connection.prepareStatement(save);
@@ -25,6 +29,12 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             pst.setDate(5, reiziger.getGeboortedatum());
             ResultSet r = pst.executeQuery();
             pst.close();
+            r.close();
+
+            if (reiziger.getAdres() != null) {
+                adresDAO.save(reiziger.getAdres());
+            }
+
         } catch (SQLException e ){
             System.out.println(e.getMessage());
             return false;
@@ -33,7 +43,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public boolean update(P2.Reiziger reiziger) {
+    public boolean update(Reiziger reiziger) throws SQLException {
         try {
             String update = "UPDATE reiziger " + "SET reiziger_id =?, voorletters =?, tussenvoegsel =?, achternaam =?, geboortedatum =?" + "WHERE reiziger_id =?";
             PreparedStatement pst = connection.prepareStatement(update);
@@ -45,6 +55,12 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             pst.setInt(6, reiziger.getId());
             ResultSet r = pst.executeQuery();
             pst.close();
+            r.close();
+
+            if (reiziger.getAdres() != null) {
+                adresDAO.update(reiziger.getAdres());
+            }
+
         } catch (SQLException e ){
             System.out.println(e.getMessage());
             return false;
@@ -53,13 +69,19 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public boolean delete(P2.Reiziger reiziger) {
+    public boolean delete(Reiziger reiziger) throws SQLException {
         try {
             String delete = "DELETE FROM reiziger WHERE reiziger_id =?";
             PreparedStatement pst = connection.prepareStatement(delete);
             pst.setInt(1, reiziger.getId());
             ResultSet r = pst.executeQuery();
             pst.close();
+            r.close();
+
+            if (reiziger.getAdres() != null) {
+                adresDAO.delete(reiziger.getAdres());
+            }
+
         } catch (SQLException e ){
             System.out.println(e.getMessage());
             return false;
@@ -68,7 +90,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public P2.Reiziger findById(int id) {
+    public Reiziger findById(int id) throws SQLException {
 
         try {
             String findById = "SELECT * FROM reiziger WHERE reiziger_id =?";
@@ -77,10 +99,11 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                P2.Reiziger reiziger = new P2.Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5));
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(id)));
                 return reiziger;
             }
             pst.close();
+            rs.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
@@ -89,9 +112,9 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public List<P2.Reiziger> findByGbdatum(String datum) {
+    public List<Reiziger> findByGbdatum(String datum) throws SQLException {
 
-        List<P2.Reiziger> reizigers = new ArrayList<>();
+        List<Reiziger> reizigers = new ArrayList<>();
 
         try {
             String findByDatum = "SELECT * FROM reiziger WHERE geboortedatum =?";
@@ -100,10 +123,11 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                P2.Reiziger reiziger = new P2.Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5));
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(rs.getInt("reiziger_id"))));
                 reizigers.add(reiziger);
             }
             pst.close();
+            rs.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
@@ -113,9 +137,9 @@ public class ReizigerDAOPsql implements ReizigerDAO {
 
 
     @Override
-    public List<P2.Reiziger> findAll() throws SQLException {
+    public List<Reiziger> findAll() throws SQLException {
 
-        List<P2.Reiziger> reizigers = new ArrayList<>();
+        List<Reiziger> reizigers = new ArrayList<>();
 
         try {
             String findAll = "SELECT * FROM reiziger";
@@ -123,10 +147,11 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                P2.Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5));
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(rs.getInt("reiziger_id"))));
                 reizigers.add(reiziger);
             }
             pst.close();
+            rs.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
