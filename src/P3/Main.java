@@ -82,11 +82,8 @@ public class Main {
         // Find by Reiziger
         String gbdatumReiziger = "1991-12-03";
         Reiziger reizigerTesting = new Reiziger(5, "F", null, "Memari", java.sql.Date.valueOf(gbdatumReiziger), null);
-        List<Adres> adressenReizger = adao.findByReiziger(reizigerTesting);
         System.out.println("[Test]");
-        for (Adres ar : adressenReizger) {
-            System.out.println(ar);
-        }
+        System.out.println(adao.findByReiziger(reizigerTesting));
 
         System.out.println();
 

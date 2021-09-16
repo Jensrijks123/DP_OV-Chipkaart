@@ -10,7 +10,7 @@ public class Reiziger {
     private String achternaam;
     private java.sql.Date geboortedatum;
     private Adres adres;
-    private ArrayList<OVChipkaart> ovChipkaarts = new ArrayList<>();
+    private ArrayList<OVChipkaart> ovChipkaarten = new ArrayList<>();
 
     public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, java.sql.Date geboortedatum, Adres adres) {
         this.id = id;
@@ -61,6 +61,14 @@ public class Reiziger {
         this.geboortedatum = geboortedatum;
     }
 
+    public Adres getAdres() {
+        return adres;
+    }
+
+    public void setAdres(Adres adres) {
+        this.adres = adres;
+    }
+
     public String getNaam() {
         if (tussenvoegsel == null) {
             tussenvoegsel = "";
@@ -75,7 +83,8 @@ public class Reiziger {
                 ", voorletters='" + voorletters + '\'' +
                 ", tussenvoegsel='" + tussenvoegsel + '\'' +
                 ", achternaam='" + achternaam + '\'' +
-                ", geboortedatum=" + geboortedatum +
+                ", geboortedatum=" + geboortedatum + '\'' +
+                ", adres=" + adres +
                 '}';
     }
 }

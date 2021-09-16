@@ -1,7 +1,7 @@
 package P4.DAO;
 
-import P3.Domain.Adres;
-import P3.Domain.Reiziger;
+import P4.Domain.Adres;
+import P4.Domain.Reiziger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,11 +12,13 @@ import java.util.List;
 
 public class AdresDAOPsql implements AdresDAO {
 
+    private Connection connection;
+
+    ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
+
     public AdresDAOPsql(Connection connection) throws SQLException {
         this.connection = connection;
     }
-
-    private Connection connection;
 
     @Override
     public boolean save(Adres adres) throws SQLException {
@@ -28,9 +30,10 @@ public class AdresDAOPsql implements AdresDAO {
             pst.setString(3, adres.getHuisnummer());
             pst.setString(4, adres.getStraat());
             pst.setString(5, adres.getWoonplaats());
-            pst.setInt(6, adres.getReiziger());
+            pst.setInt(6, adres.getReiziger().getId());
             ResultSet r = pst.executeQuery();
             pst.close();
+            r.close();
         } catch (SQLException e ){
             System.out.println(e.getMessage());
             return false;
@@ -39,7 +42,7 @@ public class AdresDAOPsql implements AdresDAO {
     }
 
     @Override
-    public boolean update(Adres adres) {
+    public boolean update(Adres adres) throws SQLException{
         try {
             String update = "UPDATE adres " + "SET adres_id =?, postcode =?, huisnummer =?, straat =?, woonplaats =?, reiziger_id =?" + "WHERE adres_id =?";
             PreparedStatement pst = connection.prepareStatement(update);
@@ -48,10 +51,11 @@ public class AdresDAOPsql implements AdresDAO {
             pst.setString(3, adres.getHuisnummer());
             pst.setString(4, adres.getStraat());
             pst.setString(5, adres.getWoonplaats());
-            pst.setInt(6, adres.getReiziger());
+            pst.setInt(6, adres.getReiziger().getId());
             pst.setInt(7, adres.getId());
             ResultSet r = pst.executeQuery();
             pst.close();
+            r.close();
         } catch (SQLException e ){
             System.out.println(e.getMessage());
             return false;
@@ -60,13 +64,14 @@ public class AdresDAOPsql implements AdresDAO {
     }
 
     @Override
-    public boolean delete(Adres adres) {
+    public boolean delete(Adres adres) throws SQLException{
         try {
             String delete = "DELETE FROM adres WHERE adres_id =?";
             PreparedStatement pst = connection.prepareStatement(delete);
             pst.setInt(1, adres.getId());
             ResultSet r = pst.executeQuery();
             pst.close();
+            r.close();
         } catch (SQLException e ){
             System.out.println(e.getMessage());
             return false;
@@ -75,9 +80,7 @@ public class AdresDAOPsql implements AdresDAO {
     }
 
     @Override
-    public List<Adres> findByReiziger(Reiziger reiziger) {
-
-        List<Adres> adressen = new ArrayList<>();
+    public Adres findByReiziger(Reiziger reiziger) throws SQLException{
 
         try {
             String findByDatum = "SELECT * FROM adres WHERE reiziger_id =?";
@@ -86,19 +89,20 @@ public class AdresDAOPsql implements AdresDAO {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                Adres adres = new Adres(rs.getInt("adres_id"), rs.getString("postcode"), rs.getString(3), rs.getString("straat"), rs.getString(5), rs.getInt("reiziger_id"));
-                adressen.add(adres);
+                Adres adres = new Adres(rs.getInt("adres_id"), rs.getString("postcode"), rs.getString(3), rs.getString("straat"), rs.getString(5), reizigerDAO.findById(rs.getInt("reiziger_id")));
+                return adres;
             }
             pst.close();
+            rs.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
         }
-        return adressen;
+        return null;
     }
 
     @Override
-    public List<Adres> findAll() throws SQLException {
+    public List<Adres> findAll() throws SQLException{
 
         List<Adres> adressen = new ArrayList<>();
 
@@ -108,10 +112,11 @@ public class AdresDAOPsql implements AdresDAO {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                Adres adres = new Adres(rs.getInt("adres_id"), rs.getString("postcode"), rs.getString(3), rs.getString("straat"), rs.getString(5), rs.getInt("reiziger_id"));
+                Adres adres = new Adres(rs.getInt("adres_id"), rs.getString("postcode"), rs.getString(3), rs.getString("straat"), rs.getString(5), reizigerDAO.findById(rs.getInt("reiziger_id")));
                 adressen.add(adres);
             }
             pst.close();
+            rs.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
