@@ -1,10 +1,9 @@
 package P4;
 
-import P4.DAO.AdresDAO;
-import P4.DAO.AdresDAOPsql;
-import P4.DAO.ReizigerDAO;
-import P4.DAO.ReizigerDAOPsql;
+
+import P4.DAO.*;
 import P4.Domain.Adres;
+import P4.Domain.OVChipkaart;
 import P4.Domain.Reiziger;
 
 import java.sql.Connection;
@@ -33,58 +32,29 @@ public class Main {
 
         connection = DriverManager.getConnection(url, p);
 
-        AdresDAO AdresDAO = new AdresDAOPsql(connection);
+        OVChipkaartDAO ovChipkaartDAO = new OVChipkaartDAOPsql(connection);
 
-        testAdresDAO(AdresDAO);
+        testOVChipkaartDAOP(ovChipkaartDAO);
 
     }
 
-    private static void testAdresDAO(AdresDAO adao) throws SQLException {
+    private static void testOVChipkaartDAOP(OVChipkaartDAO odao) throws SQLException {
 
-        System.out.println("\n---------- Test AdresDAO -------------");
+        System.out.println("\n---------- Test OVChipkaartDAO -------------");
 
-        // Save Adres
+        // save Ovchipkaart
         System.out.print("[Test]  ");
-        Reiziger gozer = new Reiziger(19, "B", "", "Bernardo", java.sql.Date.valueOf("2002-09-19"), null);
-        Adres benschop = new Adres(24, "3401BI", "101", "BernardoWijk", "Benschop", gozer);
-        adao.save(benschop);
-        System.out.println();
-
-
-        // Update Adres
-        String gbdatumUpdate = "2012-11-07";
-        Reiziger reizigerUpdate = new Reiziger(19, "D", null, "Bonk", java.sql.Date.valueOf(gbdatumUpdate), null);
-        Adres utrecht = new Adres(24, "1461BJ", "191", "Whilhelm", "Utrecht", reizigerUpdate);
-        System.out.println("[Test]");
-        System.out.println(adao.update(utrecht));
-        System.out.println();
-
-
-        // Delete
-        String gbdatumDelete = "2002-12-03";
-        Reiziger reizigerDelete = new Reiziger(19, "F", null, "Memari", java.sql.Date.valueOf(gbdatumDelete), null);
-        Adres utrecht2 = new Adres(24, "1461BJ", "191", "Whilhelm", "Utrecht", reizigerDelete);
-        System.out.println("[Test]");
-        System.out.println(adao.delete(utrecht2));
-
-        System.out.println();
-
-
-        // Haal alle adressen op uit de database
-        List<Adres> adressen = adao.findAll();
-        System.out.println("[Test] findAll() geeft de volgende adressen:");
-        for (Adres a : adressen) {
-            System.out.println(a);
-        }
+        Reiziger gozer1 = new Reiziger(19, "B", "", "Bernardo", java.sql.Date.valueOf("2002-09-19"), null, null);
+        OVChipkaart ovChipkaart1 = new OVChipkaart(212011, java.sql.Date.valueOf("2021-12-03"), 2, 2.5, gozer1);
+        odao.save(ovChipkaart1);
         System.out.println();
 
 
         // Find by Reiziger
         String gbdatumReiziger = "1991-12-03";
-        Reiziger reizigerTesting = new Reiziger(5, "F", null, "Memari", java.sql.Date.valueOf(gbdatumReiziger), null);
+        Reiziger reizigerTesting = new Reiziger(5, "F", null, "Memari", java.sql.Date.valueOf(gbdatumReiziger), null, null);
         System.out.println("[Test]");
-        System.out.println(adao.findByReiziger(reizigerTesting));
-
+        System.out.println(odao.findByReiziger(reizigerTesting));
         System.out.println();
 
     }

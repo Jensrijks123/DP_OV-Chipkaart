@@ -1,6 +1,7 @@
 package P4.Domain;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Reiziger {
 
@@ -10,15 +11,16 @@ public class Reiziger {
     private String achternaam;
     private java.sql.Date geboortedatum;
     private Adres adres;
-    private ArrayList<OVChipkaart> ovChipkaarten = new ArrayList<>();
+    private List<OVChipkaart> ovChipkaarten;
 
-    public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, java.sql.Date geboortedatum, Adres adres) {
+    public Reiziger(int id, String voorletters, String tussenvoegsel, String achternaam, java.sql.Date geboortedatum, Adres adres, List<OVChipkaart> ovChipkaarten) {
         this.id = id;
         this.voorletters = voorletters;
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;
         this.geboortedatum = geboortedatum;
         this.adres = adres;
+        this.ovChipkaarten = ovChipkaarten;
     }
 
     public int getId() {
@@ -69,6 +71,14 @@ public class Reiziger {
         this.adres = adres;
     }
 
+    public List<OVChipkaart> getOvChipkaarten() {
+        return ovChipkaarten;
+    }
+
+    public void setOvChipkaarten(List<OVChipkaart> ovChipkaarten) {
+        this.ovChipkaarten = ovChipkaarten;
+    }
+
     public String getNaam() {
         if (tussenvoegsel == null) {
             tussenvoegsel = "";
@@ -78,13 +88,21 @@ public class Reiziger {
 
     @Override
     public String toString() {
+
+        String ovString = "";
+
+        for (OVChipkaart ov : ovChipkaarten) {
+            ovString = ovString + ov + ", ";
+        }
+
         return "Reiziger{" +
                 "id=" + id +
                 ", voorletters='" + voorletters + '\'' +
                 ", tussenvoegsel='" + tussenvoegsel + '\'' +
                 ", achternaam='" + achternaam + '\'' +
                 ", geboortedatum=" + geboortedatum + '\'' +
-                ", adres=" + adres +
+                ", adres=" + adres + '\'' +
+                ", ovchipkaarten=" + ovString +
                 '}';
     }
 }

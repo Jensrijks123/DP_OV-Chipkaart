@@ -1,6 +1,7 @@
 package P4.DAO;
 
 
+import P4.Domain.OVChipkaart;
 import P4.Domain.Reiziger;
 
 import java.sql.*;
@@ -10,11 +11,12 @@ import java.util.List;
 public class ReizigerDAOPsql implements ReizigerDAO {
     private Connection connection;
 
-    AdresDAO adresDAO = new AdresDAOPsql(connection);
-
     public ReizigerDAOPsql(Connection connection) throws SQLException {
         this.connection = connection;
     }
+
+    OVChipkaartDAO ovChipkaartDAO = new OVChipkaartDAOPsql(connection);
+    AdresDAO adresDAO = new AdresDAOPsql(connection);
 
     @Override
     public boolean save(Reiziger reiziger) throws SQLException{
@@ -60,6 +62,14 @@ public class ReizigerDAOPsql implements ReizigerDAO {
                 adresDAO.update(reiziger.getAdres());
             }
 
+            int i = 0;
+            if (reiziger.getOvChipkaarten() != null) {
+                for (OVChipkaart ov : reiziger.getOvChipkaarten()) {
+                    ovChipkaartDAO.update(reiziger.getOvChipkaarten().get(i));
+                    i++;
+                }
+            }
+
         } catch (SQLException e ){
             System.out.println(e.getMessage());
             return false;
@@ -80,6 +90,13 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             if (reiziger.getAdres() != null) {
                 adresDAO.delete(reiziger.getAdres());
             }
+            int i = 0;
+            if (reiziger.getOvChipkaarten() != null) {
+                for (OVChipkaart ov : reiziger.getOvChipkaarten()) {
+                    ovChipkaartDAO.delete(reiziger.getOvChipkaarten().get(i));
+                    i++;
+                }
+            }
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
@@ -98,7 +115,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(id)));
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(id)), ovChipkaartDAO.findByReiziger(findById(id)));
                 return reiziger;
             }
             pst.close();
@@ -122,7 +139,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(rs.getInt("reiziger_id"))));
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(rs.getInt("reiziger_id"))), ovChipkaartDAO.findByReiziger(findById(rs.getInt("reiziger_id"))));
                 reizigers.add(reiziger);
             }
             pst.close();
@@ -146,7 +163,7 @@ public class ReizigerDAOPsql implements ReizigerDAO {
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(rs.getInt("reiziger_id"))));
+                Reiziger reiziger = new Reiziger(rs.getInt("reiziger_id"), rs.getString("voorletters"), rs.getString(3), rs.getString("achternaam"), rs.getDate(5), adresDAO.findByReiziger(findById(rs.getInt("reiziger_id"))), ovChipkaartDAO.findByReiziger(findById(rs.getInt("reiziger_id"))));
                 reizigers.add(reiziger);
             }
             pst.close();
