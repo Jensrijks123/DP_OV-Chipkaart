@@ -86,6 +86,14 @@ public class Reiziger {
         return "" + getVoorletters() + " " + tussenvoegsel + getAchternaam();
     }
 
+    public void addOVChipkaart(List<OVChipkaart> ovChipkaarten, OVChipkaart ovChipkaart) {
+        ovChipkaarten.add(ovChipkaart);
+    }
+
+    public void deleteOVChipkaart(List<OVChipkaart> ovChipkaarten, OVChipkaart ovChipkaart) {
+        ovChipkaarten.remove(ovChipkaart);
+    }
+
     @Override
     public String toString() {
 

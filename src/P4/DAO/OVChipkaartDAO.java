@@ -18,4 +18,5 @@ public interface OVChipkaartDAO {
 
     boolean delete(OVChipkaart ovChipkaart) throws SQLException;
 
+    List<OVChipkaart> findAll() throws SQLException;
 }

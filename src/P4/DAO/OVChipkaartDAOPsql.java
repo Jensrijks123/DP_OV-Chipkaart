@@ -30,7 +30,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("kaart_nummer"), rs.getDate("geldig_tot"), rs.getInt("klasse"), rs.getInt("saldo"), reizigerDAO.findById(reiziger.getId()));
+                OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("kaart_nummer"), rs.getDate("geldig_tot"), rs.getInt("klasse"), rs.getInt("saldo"), reiziger);
                 ovChipkaartArrayList.add(ovChipkaart);
             }
             pst.close();
@@ -91,7 +91,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
         try {
             String delete = "DELETE FROM ov_chipkaart WHERE reiziger_id =?";
             PreparedStatement pst = connection.prepareStatement(delete);
-            pst.setInt(1, ovChipkaart.getReiziger().getId());
+            pst.setInt(1, ovChipkaart.getKaartnummer());
             ResultSet r = pst.executeQuery();
             pst.close();
             r.close();
@@ -102,4 +102,28 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO{
         }
         return true;
     }
+
+    @Override
+    public List<OVChipkaart> findAll() throws SQLException {
+
+        List<OVChipkaart> ovChipkaarten = new ArrayList<>();
+
+        try {
+            String findAll = "SELECT * FROM ovChipkaarten";
+            PreparedStatement pst = connection.prepareStatement(findAll);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("kaart_nummer"), rs.getDate("geldig_tot"), rs.getInt("klasse"), rs.getDouble("saldo"), reizigerDAO.findById(rs.getInt("reiziger_id")));
+                ovChipkaarten.add(ovChipkaart);
+            }
+            pst.close();
+            rs.close();
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+        }
+        return ovChipkaarten;
+    }
+
 }

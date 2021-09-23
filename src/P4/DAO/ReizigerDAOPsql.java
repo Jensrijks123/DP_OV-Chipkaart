@@ -36,6 +36,15 @@ public class ReizigerDAOPsql implements ReizigerDAO {
                 adresDAO.save(reiziger.getAdres());
             }
 
+            int i = 0;
+            if (reiziger.getOvChipkaarten() != null) {
+                for (OVChipkaart ov : reiziger.getOvChipkaarten()) {
+                    ovChipkaartDAO.update(reiziger.getOvChipkaarten().get(i));
+                    i++;
+                }
+            }
+
+
         } catch (SQLException e ){
             System.out.println(e.getMessage());
             return false;
@@ -80,13 +89,6 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     @Override
     public boolean delete(Reiziger reiziger) throws SQLException {
         try {
-            String delete = "DELETE FROM reiziger WHERE reiziger_id =?";
-            PreparedStatement pst = connection.prepareStatement(delete);
-            pst.setInt(1, reiziger.getId());
-            ResultSet r = pst.executeQuery();
-            pst.close();
-            r.close();
-
             if (reiziger.getAdres() != null) {
                 adresDAO.delete(reiziger.getAdres());
             }
@@ -97,6 +99,13 @@ public class ReizigerDAOPsql implements ReizigerDAO {
                     i++;
                 }
             }
+
+            String delete = "DELETE FROM reiziger WHERE reiziger_id =?";
+            PreparedStatement pst = connection.prepareStatement(delete);
+            pst.setInt(1, reiziger.getId());
+            ResultSet r = pst.executeQuery();
+            pst.close();
+            r.close();
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
@@ -128,14 +137,14 @@ public class ReizigerDAOPsql implements ReizigerDAO {
     }
 
     @Override
-    public List<Reiziger> findByGbdatum(String datum) throws SQLException {
+    public List<Reiziger> findByGbdatum(Date datum) throws SQLException {
 
         List<Reiziger> reizigers = new ArrayList<>();
 
         try {
             String findByDatum = "SELECT * FROM reiziger WHERE geboortedatum =?";
             PreparedStatement pst = connection.prepareStatement(findByDatum);
-            pst.setDate(1, Date.valueOf(datum));
+            pst.setDate(1, datum);
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
