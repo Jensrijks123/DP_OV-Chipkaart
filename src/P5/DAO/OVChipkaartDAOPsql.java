@@ -1,14 +1,16 @@
-package P4.DAO;
+package P5.DAO;
 
-import P4.Domain.Adres;
 import P4.Domain.OVChipkaart;
 import P4.Domain.Reiziger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OVChipkaartDAOPsql implements OVChipkaartDAO{
+public class OVChipkaartDAOPsql implements OVChipkaartDAO {
 
     private Connection connection;
 
