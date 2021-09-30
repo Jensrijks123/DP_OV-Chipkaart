@@ -1,8 +1,8 @@
 package P5.DAO;
 
 
-import P4.Domain.OVChipkaart;
-import P4.Domain.Reiziger;
+import P5.Domain.OVChipkaart;
+import P5.Domain.Reiziger;
 
 import java.sql.*;
 import java.util.ArrayList;

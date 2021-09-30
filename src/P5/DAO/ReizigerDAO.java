@@ -1,6 +1,6 @@
 package P5.DAO;
 
-import P4.Domain.Reiziger;
+import P5.Domain.Reiziger;
 
 import java.sql.Date;
 import java.sql.SQLException;

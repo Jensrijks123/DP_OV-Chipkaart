@@ -12,12 +12,13 @@ public class OVChipkaart {
     private Reiziger reiziger;
     private List<Product> producten;
 
-    public OVChipkaart(int kaartnummer, Date geldingTot, int klasse, double saldo, Reiziger reiziger) {
+    public OVChipkaart(int kaartnummer, Date geldingTot, int klasse, double saldo, Reiziger reiziger, List<Product> producten) {
         this.kaartnummer = kaartnummer;
         this.geldingTot = geldingTot;
         this.klasse = klasse;
         this.saldo = saldo;
         this.reiziger = reiziger;
+        this.producten = producten;
     }
 
     public int getKaartnummer() {
@@ -58,6 +59,22 @@ public class OVChipkaart {
 
     public void setReiziger(Reiziger reiziger) {
         this.reiziger = reiziger;
+    }
+
+    public List<Product> getProducten() {
+        return producten;
+    }
+
+    public void setProducten(List<Product> producten) {
+        this.producten = producten;
+    }
+
+    public void addProducten(List<Product> producten, Product product) {
+        producten.add(product);
+    }
+
+    public void deleteProducten(List<Product> producten, Product product) {
+        producten.remove(product);
     }
 
     @Override

@@ -4,7 +4,10 @@ import P5.Domain.OVChipkaart;
 import P5.Domain.Product;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAOPsql implements ProductDAO{
@@ -15,30 +18,116 @@ public class ProductDAOPsql implements ProductDAO{
         this.connection = connection;
     }
 
-//    ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
+    ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
 
     @Override
     public boolean save(Product product) throws SQLException {
-        return false;
+        try {
+            String save = "INSERT INTO product(product_nummer, naam, beschrijving, prijs)" + "VALUES (?, ?, ?, ?)";
+            PreparedStatement pst = connection.prepareStatement(save);
+            pst.setInt(1, product.getId());
+            pst.setString(2, product.getNaam());
+            pst.setString(3, product.getBeschrijving());
+            pst.setDouble(4, product.getPrijs());
+            ResultSet r = pst.executeQuery();
+            pst.close();
+            r.close();
+
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean update(Product product) throws SQLException {
-        return false;
+        try {
+            String update = "UPDATE product " + "SET product_nummer =?, naam =?, beschrijving =?, prijs =?" + "WHERE product_nummer =?";
+            PreparedStatement pst = connection.prepareStatement(update);
+            pst.setInt(1, product.getId());
+            pst.setString(2, product.getNaam());
+            pst.setString(3, product.getBeschrijving());
+            pst.setDouble(4, product.getPrijs());
+            pst.setInt(5, product.getId());
+            ResultSet r = pst.executeQuery();
+            pst.close();
+            r.close();
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean delete(Product product) throws SQLException {
-        return false;
+        try {
+            String delete = "DELETE FROM product WHERE product_nummer =?";
+            PreparedStatement pst = connection.prepareStatement(delete);
+            pst.setInt(1, product.getId());
+            ResultSet r = pst.executeQuery();
+            pst.close();
+            r.close();
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public OVChipkaart findByOVChipkaart(OVChipkaart ovChipkaart) throws SQLException {
-        return null;
+    public List<Product> findByOVChipkaart(OVChipkaart ovChipkaart) throws SQLException {
+
+        List<Product> producten = new ArrayList<>();
+        List<OVChipkaart> ovChipkaarts = new ArrayList<>();
+
+        try {
+            String findbyOVChipkaart = "SELECT p.product_nummer, p.naam, p.beschrijving, p.prijs, op.kaart_nummer, op.geldig_tot, op.klasse, op.saldo, op.reiziger_id FROM product p JOIN ov_chipkaart_product op ON p.product_nummer = op.product_nummer WHERE op.kaart_nummer =?";
+            PreparedStatement pst = connection.prepareStatement(findbyOVChipkaart);
+            pst.setInt(1, ovChipkaart.getKaartnummer());
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                for (OVChipkaart ov : ovChipkaarts) {
+                    OVChipkaart ovChipkaart1 = new OVChipkaart(rs.getInt(5), rs.getDate(6), rs.getInt(7), rs.getDouble(8), reizigerDAO.findById(rs.getInt(9)), null);
+                    ovChipkaarts.add(ovChipkaart1);
+                }
+                Product product = new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), ovChipkaarts);
+                producten.add(product);
+            }
+            pst.close();
+            rs.close();
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+        }
+        return producten;
     }
 
     @Override
     public List<Product> findAll() throws SQLException {
-        return null;
+
+        List<Product> producten = new ArrayList<>();
+
+        try {
+            String findAll = "SELECT * FROM product";
+            PreparedStatement pst = connection.prepareStatement(findAll);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                Product product = new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), null);
+                producten.add(product);
+            }
+            pst.close();
+            rs.close();
+
+        } catch (SQLException e ){
+            System.out.println(e.getMessage());
+        }
+        return producten;
     }
 }

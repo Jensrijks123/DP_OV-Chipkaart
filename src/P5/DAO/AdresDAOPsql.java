@@ -1,7 +1,7 @@
 package P5.DAO;
 
-import P4.Domain.Adres;
-import P4.Domain.Reiziger;
+import P5.Domain.Adres;
+import P5.Domain.Reiziger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
