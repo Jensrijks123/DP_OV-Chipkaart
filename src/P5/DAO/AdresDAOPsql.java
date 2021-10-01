@@ -14,11 +14,11 @@ public class AdresDAOPsql implements AdresDAO {
 
     private Connection connection;
 
-    ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
-
     public AdresDAOPsql(Connection connection) throws SQLException {
         this.connection = connection;
     }
+
+    ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
 
     @Override
     public boolean save(Adres adres) throws SQLException {

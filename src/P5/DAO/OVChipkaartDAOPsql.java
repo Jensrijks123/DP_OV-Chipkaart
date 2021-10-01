@@ -1,6 +1,7 @@
 package P5.DAO;
 
 import P5.Domain.OVChipkaart;
+import P5.Domain.Product;
 import P5.Domain.Reiziger;
 
 import java.sql.Connection;
@@ -19,20 +20,29 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
     }
 
     ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
+    ProductDAO productDAO = new ProductDAOPsql(connection);
 
     @Override
     public List<OVChipkaart> findByReiziger(Reiziger reiziger) throws SQLException {
 
         List<OVChipkaart> ovChipkaartArrayList = new ArrayList<>();
+        List<Product> producten = productDAO.findAll();
 
         try {
-            String findByDatum = "SELECT * FROM ov_chipkaart WHERE reiziger_id =?";
-            PreparedStatement pst = connection.prepareStatement(findByDatum);
+            String findByReiziger = "SELECT o.kaart_nummer, o.geldig_tot, o.klasse, o.saldo, op.product_nummer FROM ov_chipkaart o JOIN ov_chipkaart_product op ON o.kaart_nummer = op.kaart_nummer WHERE o.reiziger_id =?";
+            PreparedStatement pst = connection.prepareStatement(findByReiziger);
             pst.setInt(1, reiziger.getId());
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("kaart_nummer"), rs.getDate("geldig_tot"), rs.getInt("klasse"), rs.getInt("saldo"), reiziger);
+
+                for (Product p : producten) {
+                   if (!producten.contains(rs.getInt("op.product_nummer"))) {
+                       producten.remove(p);
+                   }
+                }
+
+                OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("o.kaart_nummer"), rs.getDate("o.geldig_tot"), rs.getInt("o.klasse"), rs.getInt("o.saldo"), reiziger, producten);
                 ovChipkaartArrayList.add(ovChipkaart);
             }
             pst.close();
@@ -109,15 +119,24 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
     public List<OVChipkaart> findAll() throws SQLException {
 
         List<OVChipkaart> ovChipkaarten = new ArrayList<>();
+        List<Product> producten = productDAO.findAll();
+        List<Product> producten1 = new ArrayList<>();
 
         try {
+            String findByReiziger = "SELECT o.kaart_nummer, o.geldig_tot, o.klasse, o.saldo, op.product_nummer FROM ov_chipkaart o JOIN ov_chipkaart_product op ON o.kaart_nummer = op.kaart_nummer";
             String findAll = "SELECT * FROM ovChipkaarten";
             PreparedStatement pst = connection.prepareStatement(findAll);
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("kaart_nummer"), rs.getDate("geldig_tot"), rs.getInt("klasse"), rs.getDouble("saldo"), reizigerDAO.findById(rs.getInt("reiziger_id")));
-                ovChipkaarten.add(ovChipkaart);
+
+                for (Product p : producten) {
+                    if (producten.contains(rs.getInt("op.product_nummer"))) {
+                        producten1.add(p);
+                    }
+                    OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("kaart_nummer"), rs.getDate("geldig_tot"), rs.getInt("klasse"), rs.getDouble("saldo"), reizigerDAO.findById(rs.getInt("reiziger_id")), producten);
+                    ovChipkaarten.add(ovChipkaart);
+                }
             }
             pst.close();
             rs.close();
