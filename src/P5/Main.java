@@ -31,16 +31,13 @@ public class Main {
 
         connection = DriverManager.getConnection(url, p);
 
-        try {
-            ProductDAO productDAO1 = new ProductDAOPsql(connection);
-            OVChipkaartDAO ovChipkaartDAO1 = new OVChipkaartDAOPsql(connection);
 
-            testProductDAOP(productDAO1);
-            testOVChipkaartDAOP(ovChipkaartDAO1);
-        } catch (StackOverflowError e){
-            System.out.printf("asdasdasd");
-            System.out.printf(e.getMessage());
-        }
+        ProductDAO productDAO1 = new ProductDAOPsql(connection);
+        OVChipkaartDAO ovChipkaartDAO1 = new OVChipkaartDAOPsql(connection);
+
+        testProductDAOP(productDAO1);
+        testOVChipkaartDAOP(ovChipkaartDAO1);
+
     }
 
     private static void testProductDAOP(ProductDAO pdao) throws SQLException {
