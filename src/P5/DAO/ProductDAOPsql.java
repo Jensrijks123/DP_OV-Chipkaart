@@ -19,6 +19,7 @@ public class ProductDAOPsql implements ProductDAO{
     }
 
     ReizigerDAO reizigerDAO = new ReizigerDAOPsql(connection);
+    OVChipkaartDAO ovChipkaartDAO = new OVChipkaartDAOPsql(connection);
 
     @Override
     public boolean save(Product product) throws SQLException {
@@ -83,7 +84,7 @@ public class ProductDAOPsql implements ProductDAO{
     public List<Product> findByOVChipkaart(OVChipkaart ovChipkaart) throws SQLException {
 
         List<Product> producten = new ArrayList<>();
-        List<OVChipkaart> ovChipkaarts = new ArrayList<>();
+        List<Integer> ovChipkaarts = new ArrayList<>();
 
         try {
             String findbyOVChipkaart = "SELECT p.product_nummer, p.naam, p.beschrijving, p.prijs, op.kaart_nummer, op.geldig_tot, op.klasse, op.saldo, op.reiziger_id FROM product p JOIN ov_chipkaart_product op ON p.product_nummer = op.product_nummer WHERE op.kaart_nummer =?";
@@ -92,12 +93,13 @@ public class ProductDAOPsql implements ProductDAO{
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                for (OVChipkaart ov : ovChipkaarts) {
-                    OVChipkaart ovChipkaart1 = new OVChipkaart(rs.getInt(5), rs.getDate(6), rs.getInt(7), rs.getDouble(8), reizigerDAO.findById(rs.getInt(9)), null);
-                    ovChipkaarts.add(ovChipkaart1);
-                }
-                Product product = new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), ovChipkaarts);
+                Product product = new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4));
                 producten.add(product);
+                for (Integer ov : ovChipkaarts) {
+                    OVChipkaart ovChipkaart1 = new OVChipkaart(rs.getInt(5), rs.getDate(6), rs.getInt(7), rs.getDouble(8), reizigerDAO.findById(rs.getInt(9)));
+                    ovChipkaarts.add(ovChipkaart1.getKaartnummer());
+                    product.setOvChipkaartenNummers(ovChipkaarts);
+                }
             }
             pst.close();
             rs.close();
@@ -119,7 +121,7 @@ public class ProductDAOPsql implements ProductDAO{
             ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                Product product = new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), null);
+                Product product = new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4));
                 producten.add(product);
             }
             pst.close();

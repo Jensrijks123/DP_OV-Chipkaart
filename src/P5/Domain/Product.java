@@ -1,5 +1,6 @@
 package P5.Domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
@@ -8,14 +9,13 @@ public class Product {
     private String naam;
     private String beschrijving;
     private Double prijs;
-    private List<OVChipkaart> ovChipkaarten;
+    private List<Integer> ovChipkaartenNummers = new ArrayList<>();
 
-    public Product(int id, String naam, String beschrijving, Double prijs, List<OVChipkaart> ovChipkaarten) {
+    public Product(int id, String naam, String beschrijving, Double prijs) {
         this.id = id;
         this.naam = naam;
         this.beschrijving = beschrijving;
         this.prijs = prijs;
-        this.ovChipkaarten = ovChipkaarten;
     }
 
     public int getId() {
@@ -50,22 +50,50 @@ public class Product {
         this.prijs = prijs;
     }
 
-    public List<OVChipkaart> getOvChipkaarten() {
-        return ovChipkaarten;
+    public List<Integer> getOvChipkaartenNummers() {
+        return ovChipkaartenNummers;
     }
 
-    public void setOvChipkaarten(List<OVChipkaart> ovChipkaarten) {
-        this.ovChipkaarten = ovChipkaarten;
+    public void setOvChipkaartenNummers(List<Integer> ovChipkaartenNummers) {
+        this.ovChipkaartenNummers = ovChipkaartenNummers;
+    }
+
+    public boolean addOvChipkaartNummer(OVChipkaart ovChipkaart) {
+
+        Boolean toegevoegd = false;
+
+        for (Integer i : ovChipkaartenNummers) {
+            if (i != ovChipkaart.getKaartnummer()) {
+                ovChipkaartenNummers.add(i);
+                toegevoegd = true;
+            }
+        }
+        return toegevoegd;
+    }
+
+
+    public boolean deleteOvChipkaartNummer(OVChipkaart ovChipkaart) {
+
+        Boolean verwijderd = false;
+
+        for (Integer i : ovChipkaartenNummers) {
+            if (i == ovChipkaart.getKaartnummer()) {
+                ovChipkaartenNummers.remove(i);
+                verwijderd = true;
+            }
+        }
+        return verwijderd;
     }
 
     @Override
     public String toString() {
+
         return "Product{" +
                 "id=" + id +
                 ", naam='" + naam + '\'' +
                 ", beschrijving='" + beschrijving + '\'' +
                 ", prijs=" + prijs +
-                ", ovChipkaarten=" + ovChipkaarten +
+                ", ovChipkaarten=" + ovChipkaartenNummers+
                 '}';
     }
 }
