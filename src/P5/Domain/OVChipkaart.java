@@ -84,6 +84,7 @@ public class OVChipkaart {
                 ", geldingTot=" + geldingTot +
                 ", klasse=" + klasse +
                 ", saldo=" + saldo +
+                ", prodcuten=" + producten +
                 '}';
     }
 }
