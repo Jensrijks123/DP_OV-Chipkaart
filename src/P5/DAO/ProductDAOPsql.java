@@ -31,9 +31,15 @@ public class ProductDAOPsql implements ProductDAO{
             pst.setString(3, product.getBeschrijving());
             pst.setDouble(4, product.getPrijs());
             ResultSet r = pst.executeQuery();
+
+            if (product.getOvChipkaartenNummers() != null) {
+                for (Integer ov : product.getOvChipkaartenNummers()) {
+                    product.addOvChipkaartNummer(ov);
+                }
+            }
+
             pst.close();
             r.close();
-
 
         } catch (SQLException e ){
             System.out.println(e.getMessage());
@@ -53,6 +59,13 @@ public class ProductDAOPsql implements ProductDAO{
             pst.setDouble(4, product.getPrijs());
             pst.setInt(5, product.getId());
             ResultSet r = pst.executeQuery();
+
+            if (product.getOvChipkaartenNummers() != null) {
+                for (Integer ov : product.getOvChipkaartenNummers()) {
+                    product.addOvChipkaartNummer(ov);
+                }
+            }
+
             pst.close();
             r.close();
 
@@ -70,6 +83,13 @@ public class ProductDAOPsql implements ProductDAO{
             PreparedStatement pst = connection.prepareStatement(delete);
             pst.setInt(1, product.getId());
             ResultSet r = pst.executeQuery();
+
+            if (product.getOvChipkaartenNummers() != null) {
+                for (Integer ov : product.getOvChipkaartenNummers()) {
+                    product.deleteOvChipkaartNummer(ov);
+                }
+            }
+
             pst.close();
             r.close();
 
@@ -98,7 +118,7 @@ public class ProductDAOPsql implements ProductDAO{
                 for (Integer ov : ovChipkaarts) {
                     OVChipkaart ovChipkaart1 = new OVChipkaart(rs.getInt(5), rs.getDate(6), rs.getInt(7), rs.getDouble(8), reizigerDAO.findById(rs.getInt(9)));
                     ovChipkaarts.add(ovChipkaart1.getKaartnummer());
-                    product.setOvChipkaartenNummers(ovChipkaarts);
+                    product.addOvChipkaartNummer(ovChipkaart1.getKaartnummer());
                 }
             }
             pst.close();
@@ -123,7 +143,15 @@ public class ProductDAOPsql implements ProductDAO{
             while (rs.next()) {
                 Product product = new Product(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4));
                 producten.add(product);
+
+                if (product.getOvChipkaartenNummers() != null) {
+                    for (Integer ov : product.getOvChipkaartenNummers()) {
+                        product.addOvChipkaartNummer(ov);
+                    }
+                }
             }
+
+
             pst.close();
             rs.close();
 

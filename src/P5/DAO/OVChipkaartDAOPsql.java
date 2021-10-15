@@ -36,7 +36,7 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
             while (rs.next()) {
                 OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("kaart_nummer"), rs.getDate("geldig_tot"), rs.getInt("klasse"), rs.getInt("saldo"), reiziger);
                 ovChipkaartArrayList.add(ovChipkaart);
-                ovChipkaart.setProducten(productDAO.findByOVChipkaart(ovChipkaart));
+                ovChipkaart.addProducten((Product) productDAO.findByOVChipkaart(ovChipkaart));
             }
             pst.close();
             rs.close();
@@ -113,7 +113,6 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
 
         List<OVChipkaart> ovChipkaarten = new ArrayList<>();
         List<Product> producten = productDAO.findAll();
-        List<Product> producten1 = new ArrayList<>();
 
         try {
             String findAll = "SELECT * FROM ovChipkaarten";
@@ -123,12 +122,9 @@ public class OVChipkaartDAOPsql implements OVChipkaartDAO {
             while (rs.next()) {
 
                 for (Product p : producten) {
-                    if (producten.contains(rs.getInt("op.product_nummer"))) {
-                        producten1.add(p);
-                    }
                     OVChipkaart ovChipkaart = new OVChipkaart(rs.getInt("kaart_nummer"), rs.getDate("geldig_tot"), rs.getInt("klasse"), rs.getDouble("saldo"), reizigerDAO.findById(rs.getInt("reiziger_id")));
                     ovChipkaarten.add(ovChipkaart);
-                    ovChipkaart.setProducten(productDAO.findByOVChipkaart(ovChipkaart));
+                    ovChipkaart.addProducten((Product) productDAO.findByOVChipkaart(ovChipkaart));
                 }
             }
             pst.close();

@@ -68,13 +68,33 @@ public class OVChipkaart {
         this.producten = producten;
     }
 
-    public void addProducten(List<Product> producten, Product product) {
-        producten.add(product);
+    public boolean addProducten(Product product) {
+
+        Boolean toegevoegd = false;
+
+        for (Product p : producten) {
+            if (p != product) {
+                producten.add(p);
+                toegevoegd = true;
+            }
+        }
+        return toegevoegd;
     }
 
-    public void deleteProducten(List<Product> producten, Product product) {
-        producten.remove(product);
+
+    public boolean deleteProducten(Product product) {
+
+        Boolean verwijderd = false;
+
+        for (Product p : producten) {
+            if (p == product) {
+                producten.remove(p);
+                verwijderd = true;
+            }
+        }
+        return verwijderd;
     }
+
 
     @Override
     public String toString() {

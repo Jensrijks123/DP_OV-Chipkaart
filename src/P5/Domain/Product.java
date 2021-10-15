@@ -58,12 +58,12 @@ public class Product {
         this.ovChipkaartenNummers = ovChipkaartenNummers;
     }
 
-    public boolean addOvChipkaartNummer(OVChipkaart ovChipkaart) {
+    public boolean addOvChipkaartNummer(Integer ovChipkaart) {
 
         Boolean toegevoegd = false;
 
         for (Integer i : ovChipkaartenNummers) {
-            if (i != ovChipkaart.getKaartnummer()) {
+            if (i.equals(ovChipkaart)) {
                 ovChipkaartenNummers.add(i);
                 toegevoegd = true;
             }
@@ -72,12 +72,12 @@ public class Product {
     }
 
 
-    public boolean deleteOvChipkaartNummer(OVChipkaart ovChipkaart) {
+    public boolean deleteOvChipkaartNummer(Integer ovChipkaart) {
 
         Boolean verwijderd = false;
 
         for (Integer i : ovChipkaartenNummers) {
-            if (i == ovChipkaart.getKaartnummer()) {
+            if (i.equals(ovChipkaart)) {
                 ovChipkaartenNummers.remove(i);
                 verwijderd = true;
             }
